@@ -1,55 +1,46 @@
-cmake_minimum_required(VERSION 3.24.0)
-project(carise)
-
-# debug build
-set(CMAKE_BUILD_TYPE DEBUG)
-# c++ standard
-set(CMAKE_CXX_STANDARD 20)
-
-# includes and stuff
-include_directories(
-PRIVATE
-	# library local include directory
-	${CARISE_INCLUDE_DIR}
-
-	# SFML
-	${LIBRARY_PATH}/SFML/include/
-)
-
-add_executable(carise
-	"utility/benchmark.cpp"
+add_executable(${PROJECT_NAME}
+  "utility/benchmark.cpp"
 	"utility/logger.cpp"
 
 	"main.cpp"
 )
 
-# link some libraries
-target_link_libraries(carise
-PRIVATE
-	# SFML graphics and windowing libraries
-	sfml-window
-	sfml-graphics
-	sfml-audio
-	sfml-system
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+
+  # SFML graphics and audio libraries
+  sfml-graphics
+  sfml-audio
 )
 
-target_precompile_headers(carise
-PUBLIC
-	<vector>
-	<iostream>
-	<fstream>
-	<deque>
-	<string>
-	<map>
-	<unordered_map>
-	<array>
-	<algorithm>
-	<chrono>
-	<utility>
-	<filesystem>
-	<stddef.h>
-	<stdint.h>
-	<wchar.h>
-	<functional>
-	<cmath>
-)
+if(CARISE_USE_PCH)
+  target_precompile_headers(${PROJECT_NAME} PRIVATE
+    <array>
+    <algorithm>
+    <chrono>
+    <concepts>
+    <cstddef>
+    <cstdint>
+    <cmath>
+    <deque>
+    <functional>
+    <iostream>
+    <filesystem>
+    <fstream>
+    <map>
+    <string>
+    <unordered_map>
+    <utility>
+    <vector>
+  )
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  target_compile_options(${PROJECT_NAME} PUBLIC
+    -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type
+  )
+endif()
+
+if(CMAKE_GENERATOR MATCHES "^(Visual Studio)")
+  target_compile_options(${PROJECT_NAME} PUBLIC /MP)
+endif()
