@@ -17,6 +17,9 @@ PRIVATE
 )
 
 add_executable(carise
+	"utility/benchmark.cpp"
+	"utility/logger.cpp"
+
 	"main.cpp"
 )
 
