@@ -1,19 +1,10 @@
-cmake_minimum_required (VERSION 3.24.0)
+cmake_minimum_required(VERSION 3.18.0)
 
-if (APPLE)
-	set( CMAKE_CXX_COMPILER "/usr/bin/clang++" )
-	set( CMAKE_C_COMPILER "/usr/bin/clang" )
-endif()
+set(CMAKE_CXX_STANDARD 20)
 
-project ("carise")
+project("carise")
 
-# set some variables
-set(LIBRARY_PATH ${CMAKE_SOURCE_DIR}/3rdParty/)
+option(CARISE_USE_PCH "Use precompiled headers" ON)
 
-# set the local include directory for the engine
-set(CARISE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/)
-
-# Include sub-projects.
-add_subdirectory ("3rdParty")
-add_subdirectory ("src")
-
+add_subdirectory("third_party")
+add_subdirectory("src")
