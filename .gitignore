@@ -34,9 +34,11 @@
 *.DS_Store
 
 # folders
+/build
 /out
 /.vs
 /.vscode
+/.cache
 /lib
 /data/log/
 
@@ -44,3 +46,4 @@
 CMakeSettings.json
 CMakePresets.json
 imgui.ini
+compile_commands.json
