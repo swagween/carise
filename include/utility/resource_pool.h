@@ -18,9 +18,6 @@
 #include <utility/function_pointer.h>
 #include <utility/iterator_base.h>
 
-#define [[nodiscard]] [[nodiscard]]
-#define [[deprecated]] [[deprecated]]
-
 namespace utility {
 
 /**

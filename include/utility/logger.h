@@ -23,8 +23,6 @@
 
 namespace utility {
 
-#define [[nodiscard]] [[nodiscard]]
-
 class Logger {
 private:
 	/**
