@@ -44,6 +44,6 @@
 
 # files
 CMakeSettings.json
-CMakePresets.json
+CMakeUserPresets.json
 imgui.ini
 compile_commands.json
