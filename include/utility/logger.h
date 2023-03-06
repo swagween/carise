@@ -1,4 +1,4 @@
-/***
+/*************************
  * @file log.h
  * @author zhuzhile08 (zhuzhile08@gmail.com)
  *
@@ -19,9 +19,11 @@
 #include <fstream>
 #include <utility>
 
+#include <vulkan/vulkan.h>
+
 namespace utility {
 
-#define NODISCARD [[nodiscard]]
+#define [[nodiscard]] [[nodiscard]]
 
 class Logger {
 private:
@@ -43,7 +45,7 @@ private:
 	 * 
 	 * @return constexpr int
 	 */
-	NODISCARD constexpr int font_cast(Font font) {
+	[[nodiscard]] constexpr int font_cast(Font font) {
 		return static_cast<int>(font);
 	}
 
@@ -76,7 +78,7 @@ private:
 	 * 
 	 * @return constexpr int
 	 */
-	NODISCARD constexpr int color_cast(Color color) {
+	[[nodiscard]] constexpr int color_cast(Color color) {
 		return static_cast<int>(color);
 	}
 
@@ -103,11 +105,11 @@ public:
 	 * @tparam ...Args types to print
 	 * @param ...message messages
 	*/
-	template <typename ... Args> void log(Args... message) {
+	template <typename ... Args> constexpr void log(Args... message) {
 #ifndef NDEBUG
 		// print the message
 		(std::cout << ... << std::forward<Args>(message)) << end_l();
-#ifdef LYRA_LOG_FILE
+#ifdef LOGGER_LOG_TO_FILE
 		(m_logFile << ... << std::forward<Args>(message)) << end_l();
 #endif
 #endif
@@ -119,14 +121,14 @@ public:
 	 * @tparam ...Args types to print
 	 * @param ...message messages
 	*/
-	template <typename ... Args> void debug(Args... message) {
+	template <typename ... Args> constexpr void debug(Args... message) {
 #ifndef NDEBUG
 		// set the color and font of the message
 		ANSI(Font::NON, Color::GRY);
 		// print the message
 		std::cout << "[DEBUG]: ";
 		(std::cout << ... << std::forward<Args>(message)) << end_l();
-#ifdef LYRA_LOG_FILE
+#ifdef LOGGER_LOG_TO_FILE
 		m_logFile << "[DEBUG]: ";
 		(m_logFile << ... << std::forward<Args>(message)) << end_l();
 #endif
@@ -141,14 +143,14 @@ public:
 	 * @tparam ...Args types to print
 	 * @param ...message messages
 	*/
-	template <typename ... Args> void info(Args... message) {
+	template <typename ... Args> constexpr void info(Args... message) {
 #ifndef NDEBUG
 		// set the color and font of the message
 		ANSI(Font::NON, Color::GRN);
 		// print the message
 		std::cout << "[INFO]: ";
 		(std::cout << ... << std::forward<Args>(message)) << end_l();
-#ifdef LYRA_LOG_FILE
+#ifdef LOGGER_LOG_TO_FILE
 		m_logFile << "[INFO]: ";
 		(m_logFile << ... << std::forward<Args>(message)) << end_l();
 #endif
@@ -163,14 +165,14 @@ public:
 	 * @tparam ...Args types to print
 	 * @param ...message messages
 	*/
-	template <typename ... Args> void warning(Args... message) {
+	template <typename ... Args> constexpr void warning(Args... message) {
 #ifndef NDEBUG
 		// set the color and font of the message
 		ANSI(Font::NON, Color::YEL);
 		// print the message
 		std::cout << "[WARNING]: ";
 		(std::cout << ... << std::forward<Args>(message)) << end_l();
-#ifdef LYRA_LOG_FILE
+#ifdef LOGGER_LOG_TO_FILE
 		m_logFile << "[WARNING]: ";
 		(m_logFile << ... << std::forward<Args>(message)) << end_l();
 #endif
@@ -185,13 +187,13 @@ public:
 	 * @tparam ...Args types to print
 	 * @param ...message messages
 	*/
-	template <typename ... Args> void error(Args... message) {
+	template <typename ... Args> constexpr void error(Args... message) {
 		// set the color and font of the message
 		ANSI(Font::NON, Color::RED);
 		// print the message
 		std::cout << "[ERROR]: ";
 		(std::cout << ... << std::forward<Args>(message)) << end_l();
-#ifdef LYRA_LOG_FILE
+#ifdef LOGGER_LOG_TO_FILE
 		m_logFile << "[ERROR]: ";
 		(m_logFile << ... << std::forward<Args>(message)) << end_l();
 #endif
@@ -205,13 +207,13 @@ public:
 	 * @tparam ...Args types to print
 	 * @param ...message messages
 	*/
-	template <typename ... Args> void exception(Args... message) {
+	template <typename ... Args> constexpr void exception(Args... message) {
 		// set the color and font of the message
 		ANSI(Font::BLD, Color::RED);
 		// print the message
 		std::cout << "[EXCEPTION]: ";
 		(std::cerr << ... << std::forward<Args>(message)) << end_l();
-#ifdef LYRA_LOG_FILE
+#ifdef LOGGER_LOG_TO_FILE
 		m_logFile << "[EXCEPTION]: ";
 		(m_logFile << ... << std::forward<Args>(message)) << end_l();
 #endif
@@ -230,7 +232,7 @@ public:
 	 * 
 	 * @return const char*
 	 */
-	NODISCARD const char* tab() {
+	[[nodiscard]] const char* tab() {
 		return "\t";
 	}
 	/**
@@ -238,7 +240,7 @@ public:
 	 * 
 	 * @return const char*
 	 */
-	NODISCARD const char* end_l() {
+	[[nodiscard]] const char* end_l() {
 		return "\n";
 	}
 
@@ -264,8 +266,18 @@ Logger& log();
  * @param condition condition to check if false
  * @param message exception message
  */
-template <typename ... Args> void lassert(bool condition, Args... message) {
+template <typename ... Args> constexpr void lassert(bool condition, Args... message) {
 	if (!condition) (log().exception(message), ...);
+}
+/**
+ * @brief Vulkan function assert
+ * 
+ * @tparam Args variadic message template
+ * @param function Vulkan function to check
+ * @param purpose Purpose of the function
+ */
+template <typename Arg> constexpr void vassert(VkResult function, Arg purpose) {
+	if (function != VkResult::VK_SUCCESS) (log().exception("Vulkan Esception: Failed to ", purpose, " with error code: ", function, "!"));
 }
 
 } // namespace utility

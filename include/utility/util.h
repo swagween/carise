@@ -24,8 +24,6 @@
 
 namespace utility {
 
-#define NODISCARD [[nodiscard]]
-
 /**
  * @brief get the size of an array
  * 
@@ -34,7 +32,7 @@ namespace utility {
  * 
  * @return constexpr uint32_t
 */
-template <typename Ty> NODISCARD constexpr uint32_t arr_size(const Ty* array); 
+template <typename Ty> [[nodiscard]] constexpr uint32_t arr_size(const Ty* array); 
 
 template <typename Ty> constexpr uint32_t arr_size(const Ty* array) {
 	// return sizeof(array) / sizeof(array[0]);
@@ -49,7 +47,7 @@ template <typename Ty> constexpr uint32_t arr_size(const Ty* array) {
  * 
  * @return constexpr const void*
 */
-template <typename Ty> NODISCARD constexpr const void* get_address(const Ty& type);
+template <typename Ty> [[nodiscard]] constexpr const void* get_address(const Ty& type);
 
 template <typename Ty> constexpr const void* get_address(const Ty& type) {
 	return static_cast<const void*>(type);
@@ -63,9 +61,9 @@ template <typename Ty> constexpr const void* get_address(const Ty& type) {
  * @param dst destination vector
  * @param index index of the element
  */
-template <typename Ty> inline void move_element(std::vector<Ty>& src, std::vector<Ty>& dst, const uint32_t& index);
+template <typename Ty> inline constexpr void move_element(std::vector<Ty>& src, std::vector<Ty>& dst, const uint32_t& index);
 
-template <typename Ty> void move_element(std::vector<Ty>& src, std::vector<Ty>& dst, const uint32_t& index) {
+template <typename Ty> constexpr void move_element(std::vector<Ty>& src, std::vector<Ty>& dst, const uint32_t& index) {
 	dst.push_back(std::move(src.at(index)));
 	src.erase(src.begin() + index);
 }
@@ -75,7 +73,7 @@ template <typename Ty> void move_element(std::vector<Ty>& src, std::vector<Ty>& 
  * 
  * @return std::filesystem::path 
  */
-NODISCARD inline std::filesystem::path get_executable_path();
+[[nodiscard]] inline std::filesystem::path get_executable_path();
 
 std::filesystem::path get_executable_path() {
 #ifdef __APPLE__

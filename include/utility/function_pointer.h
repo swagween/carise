@@ -23,9 +23,9 @@ template <class> class Function;
  */
 template <class Ty, class... Args> class Function <Ty(Args...)> {
 public:
-	typedef Ty result_type;
-	typedef Function wrapper_type;
-	typedef result_type(*callable_type)(Args...);
+	using result_type = Ty;
+	using wrapper_type = Function;
+	typedef result_type(*callable_type)(Args...); // don't know how to make this with using, but this is good enough anyways
 
 	constexpr Function() noexcept = default;
 	/**
@@ -111,7 +111,7 @@ public:
 	 * 
 	 * @param second second function pointer wrapper
 	 */
-	void swap(wrapper_type& second) noexcept {
+	constexpr void swap(wrapper_type& second) noexcept {
 		std::swap(this->function, second->function);
 	}
 	/**
@@ -119,7 +119,7 @@ public:
 	 * 
 	 * @param second second function pointer
 	 */
-	void swap(callable_type& second) noexcept {
+	constexpr void swap(callable_type& second) noexcept {
 		std::swap(this->function, second);
 	}
 	/**
@@ -127,7 +127,7 @@ public:
 	 * 
 	 * @param second second function pointer wrapper
 	 */
-	void swap(wrapper_type&& second) noexcept {
+	constexpr void swap(wrapper_type&& second) noexcept {
 		std::swap(this->function, std::move(second->function));
 	}
 	/**
@@ -135,7 +135,7 @@ public:
 	 * 
 	 * @param second second function pointer
 	 */
-	void swap(callable_type&& second) noexcept {
+	constexpr void swap(callable_type&& second) noexcept {
 		std::swap(this->function, std::move(second));
 	}
 
@@ -151,7 +151,7 @@ public:
 	 * @brief call the internal function
 	 * 
 	 * @param args function arguments if necceceary
-	 * @return lyra::Function::return_type
+	 * @return utility::Function::return_type
 	 */
 	constexpr result_type operator()(Args&&... arguments) const {
 		return (*function)(std::forward<Args>(arguments)...);
