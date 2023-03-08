@@ -10,6 +10,9 @@ target_link_libraries(${PROJECT_NAME}
   # SFML graphics and audio libraries
   sfml-graphics
   sfml-audio
+
+  # utility libraries
+  fmt::fmt
 )
 
 if(CARISE_USE_PCH)
