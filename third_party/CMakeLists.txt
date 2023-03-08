@@ -1,5 +1,7 @@
 include(FetchContent)
 
+set(CMAKE_CXX_STANDARD 14)
+
 set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(sfml
   GIT_REPOSITORY https://github.com/SFML/SFML
